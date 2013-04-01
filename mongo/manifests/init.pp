@@ -1,10 +1,10 @@
 class mongo( $port, $component ) {
 
   $mongo_data_dir="/data/mongo/${component}_${port}"
-  $logpath="/var/log/mongo/${component}_mongod_${port}.log"
-  $dbpath="/data/mongo/${component}_${port}"
-  $pidfilepath="/data/mongo/${component}_${port}/mongod.pid"
-  $replSet="sdrepset${component}"
+  #$logpath="/var/log/mongo/${component}_mongod_${port}.log"
+  #$dbpath="/data/mongo/${component}_${port}"
+  #$pidfilepath="/data/mongo/${component}_${port}/mongod.pid"
+  #$replSet="sdrepset${component}"
 
   $server_pkg_name = $::osfamily ? {
     debian => 'mongodb-10gen',
