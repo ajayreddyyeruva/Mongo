@@ -1,6 +1,6 @@
-class mongo( $port, $component, $master, $master_port=undef, ) {
+class mongo( $port, $replSet, $master, $master_port=undef, ) {
 
-  $mongo_data_dir="/data/mongo/${component}_${port}"
+  $mongo_data_dir="/data/mongo/${replSet}_${port}"
 
   $public_ip = $::ipaddress
 
