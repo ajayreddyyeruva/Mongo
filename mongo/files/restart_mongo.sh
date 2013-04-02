@@ -12,3 +12,6 @@ fi
 echo "Using conf file ${MONGO_DATA_DIR}/mongod.conf"
 #mongod -f ${MONGO_DATA_DIR}/mongod.conf
 mongod -f ${MONGO_DATA_DIR}/mongod.conf
+
+echo "Going to sleep so that mongo should be up"
+sleep 60

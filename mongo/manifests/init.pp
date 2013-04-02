@@ -70,7 +70,7 @@ class mongo( $port, $replSet, $master, $master_port=undef, ) {
     user      => mongo,
     command   => "${mongo_data_dir}/restart_mongo.sh ${mongo_data_dir}",
     logoutput => true,
-    before    => Exec['replicaset'],
+    before    => File['replicaset_file'],
   }
 
    $replicaset_file = "${master}" ? {
