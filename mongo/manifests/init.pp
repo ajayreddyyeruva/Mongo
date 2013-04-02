@@ -1,10 +1,8 @@
-class mongo( $port, $component ) {
+class mongo( $port, $component, $master, $master_port=undef, ) {
 
   $mongo_data_dir="/data/mongo/${component}_${port}"
-  #$logpath="/var/log/mongo/${component}_mongod_${port}.log"
-  #$dbpath="/data/mongo/${component}_${port}"
-  #$pidfilepath="/data/mongo/${component}_${port}/mongod.pid"
-  #$replSet="sdrepset${component}"
+
+  $public_ip = $::ipaddress
 
   $server_pkg_name = $::osfamily ? {
     debian => 'mongodb-10gen',
@@ -68,10 +66,29 @@ class mongo( $port, $component ) {
   }
 
   exec { "${mongo_data_dir}/restart_mongo.sh ${mongo_data_dir}":
-    require     => [Package['mongodb'],File['mongo_conf'], File['mongo_restart_file']],
-    user        => mongo,
-    command     => "${mongo_data_dir}/restart_mongo.sh ${mongo_data_dir}",
-    logoutput   => true,
-    # refreshonly => true,
+    require   => [Package['mongodb'],File['mongo_conf'], File['mongo_restart_file']],
+    user      => mongo,
+    command   => "${mongo_data_dir}/restart_mongo.sh ${mongo_data_dir}",
+    logoutput => true,
+    before    => Exec['replicaset'],
   }
+
+   $replicaset_file = "${master}" ? {
+         master     => 'mongo/master_replicaset.cmd',
+             slave => 'mongo/slave_replicaset.cmd',
+   }
+
+  file { 'replicaset_file':
+    content => template("${replicaset_file}"),
+    path    => "${mongo_data_dir}/replicaset.cmd",
+    before  => Exec['replicaset'],
+  }
+
+
+  exec { 'replicaset':
+    user      => mongo,
+    command => "mongo --port ${master_port} < ${mongo_data_dir}/replicaset.cmd",
+    logoutput => true,
+  }
+
 }
